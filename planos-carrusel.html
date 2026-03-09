@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Luxterra 61 — Planos del Proyecto</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --base:#0A0A0A;--navy:#0D1B2A;--ivory:#F5F0E8;--accent:#C8BFA8;--line:#2A3A4A;
+      --font-t:'Cormorant Garamond',Georgia,serif;--font-b:'Raleway',sans-serif;--tr:0.35s ease;
+    }
+    html{scroll-behavior:smooth;}
+    body{background:var(--base);color:var(--ivory);font-family:var(--font-b);}
+
+    /* ── SECTION ── */
+    .pc-section{
+      position:relative;padding:2rem 1.5rem 4rem;overflow:hidden;
+    }
+    .pc-section::before{
+      content:'';position:absolute;inset:0;
+      background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(13,27,42,.65) 0%,transparent 65%);
+      pointer-events:none;
+    }
+    .pc-section::after{
+      content:'';position:absolute;inset:0;
+      background-image:
+        linear-gradient(rgba(200,191,168,.022) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(200,191,168,.022) 1px,transparent 1px);
+      background-size:48px 48px;pointer-events:none;
+    }
+
+    /* ── TABS ── */
+    .pc-tabs{
+      display:flex;flex-wrap:wrap;justify-content:center;gap:.4rem;
+      max-width:920px;margin:0 auto 2rem;
+      position:relative;z-index:1;
+      opacity:0;animation:fadeUp .8s .1s ease forwards;
+    }
+    .pc-tab{
+      padding:.5rem 1.2rem;background:transparent;
+      border:1px solid var(--line);border-radius:1px;
+      color:rgba(245,240,232,.45);font-family:var(--font-b);
+      font-size:.6rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;
+      cursor:pointer;transition:border-color var(--tr),color var(--tr),background var(--tr);
+      position:relative;overflow:hidden;
+    }
+    .pc-tab::before{
+      content:'';position:absolute;inset:0;background:var(--accent);
+      transform:scaleX(0);transform-origin:left;transition:transform .35s ease;z-index:0;
+    }
+    .pc-tab span{position:relative;z-index:1;}
+    .pc-tab:hover{border-color:rgba(200,191,168,.5);color:var(--ivory);}
+    .pc-tab--active{border-color:var(--accent);color:var(--base);background:var(--accent);}
+    .pc-tab--active::before{transform:scaleX(1);}
+
+    /* ── VIEWER ── */
+    .pc-viewer{
+      position:relative;max-width:1000px;margin:0 auto;
+      z-index:1;opacity:0;animation:fadeUp 1s .2s ease forwards;
+    }
+
+    /* ── SLIDES — una columna, plano ocupa todo el ancho ── */
+    .pc-slide{display:none;flex-direction:column;gap:0;}
+    .pc-slide--active{display:flex;animation:slideIn .4s ease;}
+    @keyframes slideIn{from{opacity:0;transform:translateX(12px);}to{opacity:1;transform:translateX(0);}}
+
+    /* ── INFO BAR — encima del plano ── */
+    .pc-info-bar{
+      display:flex;align-items:center;flex-wrap:wrap;gap:.8rem 2rem;
+      padding:.9rem 1.2rem;
+      background:var(--navy);
+      border:1px solid var(--line);
+      border-bottom:none;
+      border-left:2px solid var(--accent);
+      border-radius:2px 2px 0 0;
+    }
+    .pc-info-bar__badge{
+      font-size:.5rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;
+      color:var(--accent);background:rgba(200,191,168,.08);
+      border:1px solid rgba(200,191,168,.2);padding:.22rem .6rem;
+      border-radius:1px;white-space:nowrap;flex-shrink:0;
+    }
+    .pc-info-bar__title{
+      font-family:var(--font-t);font-size:clamp(1rem,1.8vw,1.25rem);
+      font-weight:300;color:var(--ivory);letter-spacing:.03em;
+      white-space:nowrap;flex-shrink:0;
+    }
+    .pc-info-bar__divider{
+      width:1px;height:24px;background:var(--line);flex-shrink:0;
+    }
+    .pc-info-bar__specs{
+      display:flex;gap:1.5rem;flex-wrap:wrap;align-items:center;flex:1;
+    }
+    .pc-info-bar__spec{
+      display:flex;flex-direction:column;gap:.1rem;
+    }
+    .pc-info-bar__spec-label{
+      font-size:.46rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;
+      color:rgba(200,191,168,.4);
+    }
+    .pc-info-bar__spec-val{
+      font-family:var(--font-t);font-size:.88rem;font-weight:400;
+      color:var(--ivory);letter-spacing:.02em;
+    }
+    .pc-info-bar__spaces{
+      display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;
+    }
+    .pc-info-bar__space{
+      font-size:.52rem;font-weight:300;
+      color:rgba(245,240,232,.5);
+      padding-left:.6rem;position:relative;white-space:nowrap;
+    }
+    .pc-info-bar__space::before{
+      content:'—';position:absolute;left:0;
+      color:var(--accent);opacity:.5;font-size:.48rem;
+    }
+
+    /* ── IFRAME WRAPPER ── */
+    .pc-frame-wrap{
+      position:relative;background:#060d14;
+      border:1px solid var(--line);
+      border-top:none;
+      border-radius:0 0 2px 2px;
+      overflow:hidden;
+    }
+    .pc-frame-wrap iframe{
+      width:100%;height:560px;border:none;display:block;
+      background:#060d14;overflow:hidden;
+    }
+    .pc-frame-wrap::after{
+      content:'Pase el cursor sobre los espacios para más información';
+      position:absolute;bottom:8px;right:10px;
+      font-family:var(--font-b);font-size:.45rem;font-weight:400;letter-spacing:.1em;
+      color:rgba(200,191,168,.35);pointer-events:none;
+    }
+
+    /* ── NAV FLECHAS ── */
+    .pc-nav{
+      position:absolute;top:50%;transform:translateY(-50%);
+      width:40px;height:40px;background:rgba(10,10,10,.85);
+      border:1px solid var(--line);border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      cursor:pointer;z-index:20;color:var(--accent);
+      transition:border-color var(--tr),background var(--tr),transform var(--tr);
+    }
+    .pc-nav svg{width:16px;height:16px;}
+    .pc-nav--prev{left:-20px;}
+    .pc-nav--next{right:-20px;}
+    .pc-nav:hover{background:var(--navy);border-color:var(--accent);transform:translateY(-50%) scale(1.1);}
+
+    /* ── DOTS ── */
+    .pc-dots{display:flex;justify-content:center;gap:.5rem;margin-top:1.5rem;}
+    .pc-dot-nav{width:6px;height:6px;border-radius:50%;background:var(--line);border:none;cursor:pointer;transition:background var(--tr),transform var(--tr);}
+    .pc-dot-nav--active{background:var(--accent);transform:scale(1.4);}
+
+    /* ── ANIMACIONES ── */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+    @keyframes expandLine{from{transform:scaleX(0);opacity:0;}to{transform:scaleX(1);opacity:1;}}
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:700px){
+      .pc-info-bar{flex-direction:column;align-items:flex-start;gap:.6rem;}
+      .pc-info-bar__divider{display:none;}
+      .pc-frame-wrap iframe{height:420px;}
+      .pc-nav--prev{left:4px;}
+      .pc-nav--next{right:4px;}
+      .pc-section{padding:1.5rem 1rem 3rem;}
+    }
+  </style>
+</head>
+<body>
+<section class="pc-section">
+
+  <!-- TABS -->
+  <div class="pc-tabs">
+    <button class="pc-tab pc-tab--active" data-index="0"><span>Piso 1</span></button>
+    <button class="pc-tab" data-index="1"><span>Piso 2</span></button>
+    <button class="pc-tab" data-index="2"><span>Pisos 3–4</span></button>
+    <button class="pc-tab" data-index="3"><span>Piso 5</span></button>
+    <button class="pc-tab" data-index="4"><span>Pisos 6–9</span></button>
+    <button class="pc-tab" data-index="5"><span>Terraza</span></button>
+  </div>
+
+  <div class="pc-viewer">
+
+    <!-- ── SLIDE 0 — Piso 1 ── -->
+    <div class="pc-slide pc-slide--active" data-slide="0">
+      <div class="pc-info-bar">
+        <span class="pc-info-bar__badge">NV. +0.00 MT</span>
+        <h3 class="pc-info-bar__title">Planta Primer Piso</h3>
+        <div class="pc-info-bar__divider"></div>
+        <div class="pc-info-bar__specs">
+          <div class="pc-info-bar__spec">
+            <span class="pc-info-bar__spec-label">Frente</span>
+            <span class="pc-info-bar__spec-val">15.16 m</span>
+          </div>
+          <div class="pc-info-bar__spec">
+            <span class="pc-info-bar__spec-label">Fondo</span>
+            <span class="pc-info-bar__spec-val">11.18 m</span>
+          </div>
+        </div>
+        <div class="pc-info-bar__divider"></div>
+        <div class="pc-info-bar__spaces">
+          <span class="pc-info-bar__space">Recepción / Lobby</span>
+          <span class="pc-info-bar__space">Local 01 Comercial</span>
+          <span class="pc-info-bar__space">Salón Comunal ~42.7 m²</span>
+          <span class="pc-info-bar__space">Circulación vertical</span>
+        </div>
+      </div>
+      <div class="pc-frame-wrap">
+        <iframe src="plano-svg-p1.html" title="Planta Primer Piso" loading="lazy" scrolling="no"></iframe>
+      </div>
+    </div>
+
+    <!-- ── SLIDE 1 — Piso 2 ── -->
+    <div class="pc-slide" data-slide="1">
+      <div class="pc-info-bar">
+        <span class="pc-info-bar__badge">NV. +2.85 MT</span>
+        <h3 class="pc-info-bar__title">Planta Segundo Piso</h3>
+        <div class="pc-info-bar__divider"></div>
+        <div class="pc-info-bar__specs">
+          <div class="pc-info-bar__spec">
+            <span class="pc-info-bar__spec-label">Frente</span>
+            <span class="pc-info-bar__spec-val">15.16 m</span>
+          </div>
+          <div class="pc-info-bar__spec">
+            <span class="pc-info-bar__spec-label">Fondo</span>
+            <span class="pc-info-bar__spec-val">8.72 m</span>
+          </div>
+          <div class="pc-info-bar__spec">
+            <span class="pc-info-bar__spec-label">Unidades</span>
+            <span class="pc-info-bar__spec-val">5</span>
+          </div>
+        </div>
+        <div class="pc-info-bar__divider"></div>
+        <div class="pc-info-bar__spaces">
+          <span class="pc-info-bar__space">Unidad A Sala/Comedor ~38 m²</span>
+          <span class="pc-info-bar__space">Unidad B Sala/Cocina ~35 m²</span>
+          <span class="pc-info-bar__space">Unidades C, D Habitaciones</span>
+          <span class="pc-info-bar__space">Unidad E ~43 m²</span>
+        </div>
+      </div>
+      <div class="pc-frame-wrap">
+        <iframe src="plano-svg-p2.html" title="Planta Segundo Piso" loading="lazy" scrolling="no"></iframe>
+      </div>
+    </div>
+
+    <!-- ── SLIDE 2 — Pisos 3-4 ── -->
+    <div class="pc-slide" data-slide="2">
+      <div class="pc-info-bar">
+        <span class="pc-info-bar__badge">NV. +5.70 / +8.55 MT</span>
+        <h3 class="pc-info-bar__title">Plantas 3er y 4to Piso</h3>
+        <div class="pc-info-bar__divider"></div>
+        <div class="pc-info-bar__specs">
+          <div class="pc-info-bar__spec">
+            <span class="pc-info-bar__spec-label">Frente</span>
+            <span class="pc-info-bar__spec-val">15.16 m</span>
+          </div>
+          <div class="pc-info-bar__spec">
+            <span class="pc-info-bar__spec-label">Fondo</span>
+            <span class="pc-info-bar__spec-val">8.14 m</span>
+          </div>
+          <div class="pc-info-bar__spec">
+            <span class="pc-info-bar__spec-label">Tipo</span>
+            <span class="pc-info-bar__spec-val">Planta tipo</span>
+          </div>
+        </div>
+        <div class="pc-info-bar__divider"></div>
+        <div class="pc-info-bar__spaces">
+          <span class="pc-info-bar__space">Unidad A ~34.8 m²</span>
+          <span class="pc-info-bar__space">Unidad B ~34.2 m²</span>
+          <span class="pc-info-bar__space">Unidades C, D Habitaciones</span>
+          <span class="pc-info-bar__space">Unidad E ~40.5 m²</span>
+        </div>
+      </div>
+      <div class="pc-frame-wrap">
+        <iframe src="plano-svg-p3p4.html" title="Plantas 3er y 4to Piso" loading="lazy" scrolling="no"></iframe>
+      </div>
+    </div>
+
+    <!-- ── SLIDE 3 — Piso 5 ── -->
+    <div class="pc-slide" data-slide="3">
+      <div class="pc-info-bar">
+        <span class="pc-info-bar__badge">NV. +11.40 MT</span>
+        <h3 class="pc-info-bar__title">Planta Quinto Piso</h3>
+        <div class="pc-info-bar__divider"></div>
+        <div class="pc-info-bar__specs">
+          <div class="pc-info-bar__spec">
+            <span class="pc-info-bar__spec-label">Frente</span>
+            <span class="pc-info-bar__spec-val">15.16 m</span>
+          </div>
+          <div class="pc-info-bar__spec">
+            <span class="pc-info-bar__spec-label">Especial</span>
+            <span class="pc-info-bar__spec-val">~62 m²</span>
+          </div>
+        </div>
+        <div class="pc-info-bar__divider"></div>
+        <div class="pc-info-bar__spaces">
+          <span class="pc-info-bar__space">Unidad Grande ~62 m²</span>
+          <span class="pc-info-bar__space">Unidad F Habitación ~18.7 m²</span>
+          <span class="pc-info-bar__space">Unidad G Habitación ~18.7 m²</span>
+          <span class="pc-info-bar__space">Ductos técnicos × 2</span>
+        </div>
+      </div>
+      <div class="pc-frame-wrap">
+        <iframe src="plano-svg-p5.html" title="Planta Quinto Piso" loading="lazy" scrolling="no"></iframe>
+      </div>
+    </div>
+
+    <!-- ── SLIDE 4 — Pisos 6-9 ── -->
+    <div class="pc-slide" data-slide="4">
+      <div class="pc-info-bar">
+        <span class="pc-info-bar__badge">NV. +14.12 → +22.28 MT</span>
+        <h3 class="pc-info-bar__title">Plantas 6to al 9no Piso</h3>
+        <div class="pc-info-bar__divider"></div>
+        <div class="pc-info-bar__specs">
+          <div class="pc-info-bar__spec">
+            <span class="pc-info-bar__spec-label">Pisos</span>
+            <span class="pc-info-bar__spec-val">P6, P7, P8, P9</span>
+          </div>
+          <div class="pc-info-bar__spec">
+            <span class="pc-info-bar__spec-label">Tipo</span>
+            <span class="pc-info-bar__spec-val">Planta tipo</span>
+          </div>
+        </div>
+        <div class="pc-info-bar__divider"></div>
+        <div class="pc-info-bar__spaces">
+          <span class="pc-info-bar__space">Unidad A Sala/Comedor ~42 m²</span>
+          <span class="pc-info-bar__space">Unidad B Sala/Cocina ~28 m²</span>
+          <span class="pc-info-bar__space">Unidades C, D Habitaciones</span>
+          <span class="pc-info-bar__space">Vacíos zona verde × 2</span>
+        </div>
+      </div>
+      <div class="pc-frame-wrap">
+        <iframe src="plano-svg-p6p9.html" title="Plantas 6to al 9no Piso" loading="lazy" scrolling="no"></iframe>
+      </div>
+    </div>
+
+    <!-- ── SLIDE 5 — Terraza ── -->
+    <div class="pc-slide" data-slide="5">
+      <div class="pc-info-bar">
+        <span class="pc-info-bar__badge">NV. +25.00 MT</span>
+        <h3 class="pc-info-bar__title">Terraza Rooftop 360°</h3>
+        <div class="pc-info-bar__divider"></div>
+        <div class="pc-info-bar__specs">
+          <div class="pc-info-bar__spec">
+            <span class="pc-info-bar__spec-label">Área</span>
+            <span class="pc-info-bar__spec-val">~70.80 m²</span>
+          </div>
+          <div class="pc-info-bar__spec">
+            <span class="pc-info-bar__spec-label">Vistas</span>
+            <span class="pc-info-bar__spec-val">360°</span>
+          </div>
+        </div>
+        <div class="pc-info-bar__divider"></div>
+        <div class="pc-info-bar__spaces">
+          <span class="pc-info-bar__space">Terraza abierta ~70.80 m²</span>
+          <span class="pc-info-bar__space">Zona BBQ / parrilla</span>
+          <span class="pc-info-bar__space">Zona lounge</span>
+          <span class="pc-info-bar__space">Vistas 360° Bogotá</span>
+        </div>
+      </div>
+      <div class="pc-frame-wrap">
+        <iframe src="plano-svg-terraza.html" title="Planta Terraza Rooftop" loading="lazy" scrolling="no"></iframe>
+      </div>
+    </div>
+
+    <!-- FLECHAS -->
+    <button class="pc-nav pc-nav--prev" id="pc-prev" aria-label="Anterior">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="15,4 7,12 15,20"/></svg>
+    </button>
+    <button class="pc-nav pc-nav--next" id="pc-next" aria-label="Siguiente">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="9,4 17,12 9,20"/></svg>
+    </button>
+
+    <!-- DOTS -->
+    <div class="pc-dots">
+      <button class="pc-dot-nav pc-dot-nav--active" data-index="0" aria-label="Piso 1"></button>
+      <button class="pc-dot-nav" data-index="1" aria-label="Piso 2"></button>
+      <button class="pc-dot-nav" data-index="2" aria-label="Pisos 3-4"></button>
+      <button class="pc-dot-nav" data-index="3" aria-label="Piso 5"></button>
+      <button class="pc-dot-nav" data-index="4" aria-label="Pisos 6-9"></button>
+      <button class="pc-dot-nav" data-index="5" aria-label="Terraza"></button>
+    </div>
+
+  </div><!-- /pc-viewer -->
+
+</section>
+
+<script>
+  const tabs=document.querySelectorAll('.pc-tab');
+  const slides=document.querySelectorAll('.pc-slide');
+  const dotNavs=document.querySelectorAll('.pc-dot-nav');
+  const btnPrev=document.getElementById('pc-prev');
+  const btnNext=document.getElementById('pc-next');
+  let current=0;
+  const total=slides.length;
+
+  function goTo(idx){
+    slides[current].classList.remove('pc-slide--active');
+    tabs[current].classList.remove('pc-tab--active');
+    dotNavs[current].classList.remove('pc-dot-nav--active');
+    current=(idx+total)%total;
+    slides[current].classList.add('pc-slide--active');
+    tabs[current].classList.add('pc-tab--active');
+    dotNavs[current].classList.add('pc-dot-nav--active');
+  }
+
+  tabs.forEach(t=>t.addEventListener('click',()=>goTo(+t.dataset.index)));
+  dotNavs.forEach(d=>d.addEventListener('click',()=>goTo(+d.dataset.index)));
+  btnPrev.addEventListener('click',()=>goTo(current-1));
+  btnNext.addEventListener('click',()=>goTo(current+1));
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowLeft')goTo(current-1);
+    if(e.key==='ArrowRight')goTo(current+1);
+  });
+
+  // Auto-resize iframes — sin scroll
+  function resizeIframe(iframe){
+    try{
+      const doc=iframe.contentDocument||iframe.contentWindow.document;
+      // Esperar a que el contenido esté listo
+      setTimeout(()=>{
+        const h=doc.documentElement.scrollHeight||doc.body.scrollHeight;
+        if(h>200){
+          iframe.style.height=h+'px';
+          // deshabilitar scroll interno
+          doc.documentElement.style.overflow='hidden';
+          doc.body.style.overflow='hidden';
+        }
+      },100);
+    }catch(e){}
+  }
+  document.querySelectorAll('.pc-frame-wrap iframe').forEach(iframe=>{
+    iframe.addEventListener('load',()=>resizeIframe(iframe));
+    if(iframe.contentDocument?.readyState==='complete') resizeIframe(iframe);
+  });
+</script>
+</body>
+</html>
